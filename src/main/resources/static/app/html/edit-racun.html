@@ -1,0 +1,38 @@
+<div ng-controller="editRacunCTrl">
+    <div>
+        <form>
+            <label> Izmena  racuna </label>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <div class="form-group">
+                        <label for="lmesta" >Ime i Prezime</label>
+                        <input class="form-control" id="lmesta" ng-model="edRacunNew.imePrezime"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="lcena" >JMBG</label>
+                        <input class="form-control" id="lcena" ng-model="edRacunNew.jmdb"/>
+                    </div>
+                    <div class="form-group">
+                        <label>banka</label>
+                        <select class="form-control" ng-model="edRacunNew.bankaId">
+                            <option ng-repeat="b in banke"  ng-selected="b.id ==edRacunNew.bankaId" value="{{b.id}}">{{b.naziv}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="broj" >broj racuna</label>
+                        <input class="form-control" id="broj" ng-model="edRacunNew.brRacuna"/>
+                    </div>
+                    <div class="form-group">
+                        <label>tip racuna</label>
+                        <select class="form-control" ng-model="edRacunNew.tipId" ng-focus="getTipovi()">
+                            <option ng-repeat="t in tipovi" ng-selected="t.id == edRacunNew.tipId" value="{{t.id}}">{{t.naziv}}</option>
+                        </select>
+                    </div>
+                    <tr>
+                        <td><button ng-click="editRacun()">edit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+
+<div ng-controller="RacunCTRL">
+
+    <div>
+        <form>
+            <label> Dodavanje Racuna </label>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <div class="form-group">
+                        <label for="lmesta" >Ime i Prezime</label>
+                        <input class="form-control" id="lmesta" ng-model="RacunNew.imePrezime"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="lcena" >JMBG</label>
+                        <input class="form-control" id="lcena" ng-model="RacunNew.jmdb"/>
+                    </div>
+                    <div class="form-group">
+                        <label>banka</label>
+                        <select class="form-control" ng-model="RacunNew.bankaId">
+                            <option ng-repeat="b in banke" value="{{b.id}}">{{b.naziv}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="broj" >broj racuna</label>
+                        <input class="form-control" id="broj" ng-model="RacunNew.brRacuna"/>
+                    </div>
+                    <div class="form-group">
+                        <label>tip racuna</label>
+                        <select class="form-control" ng-model="RacunNew.tipId" ng-focus="getTipovi()">
+                            <option ng-repeat="t in tipovi" value="{{t.id}}">{{t.naziv}}</option>
+                        </select>
+                    </div>
+                    <tr>
+                        <td><button ng-click="addRacun()">Dodaj</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div>
+        <form>
+            <label> Pretraga racuna </label>
+            <table class="table table-bordered table-striped">
+                <tbody>
+
+                    <div class="form-group">
+                        <label for="ljmbg" >jmbg</label>
+                        <input class="form-control" id="ljmbg" ng-model="search.jmbg"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Banka</label>
+                        <select class="form-control" ng-model="search.bankaId">
+                            <option ng-repeat="b in banke" value="{{b.id}}">{{b.naziv}}</option>
+                        </select>
+                    </div>
+                        <td><button ng-click="findRacun()">Trazi</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+    <div>
+        <div style="margin-bottom:10px" class="btn-group float-right">
+			<button ng-disabled="pageNum == 0" ng-click="changePage(-1)" class="btn btn-primary">Previous</button>
+			<button ng-disabled="pageNum == totalPages - 1" ng-click="changePage(1)" class="btn btn-primary">Next</button>
+        </div>
+        
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Ime i Prezime</th> 
+                        <th>JMBG</th>
+                        <th>Stanje</th>
+                        <th>Broj Racuna</th>
+                        <th>Tip Racuna</th>
+                        <th>Banka</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+
+                <tbody ng-repeat="r in racuni">
+                    <tr>
+                        <td>{{r.imePrezime}}</td>
+                        <td>{{r.jmdb}}</td>
+                        <td>{{r.stanje}}</td>
+                        <td>{{r.brRacuna}}</td>
+                        <td>{{r.tipNaziv}}</td>
+                        <td>{{r.bankaNaziv}}</td>
+                        <td><button ng-click="toEditRacun(r.id)">edit</button></td>
+                        <td><button ng-click="todeleteRacun(r.id)">obrisi</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+    </div>
+
+</div>
