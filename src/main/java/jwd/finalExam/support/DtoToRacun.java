@@ -33,7 +33,7 @@ public class DtoToRacun implements Converter<RacunDTO, Racun> {
 		racun.setTip(tipSer.findOne(source.getTipId()));
 		racun.setBrRacuna(source.getBrRacuna());
 		racun.setStanje(source.getStanje());
-		racun.setJMDB(source.getJMDB());
+		racun.setJMBG(source.getJMDB());
 		racun.setImePrezime(source.getImePrezime());
 	
 		return racun;

@@ -5,9 +5,9 @@ finalExam.controller("HomeCtrl", function($scope, $location){
 });
 
 finalExam.controller("editRacunCTrl", function($scope, $http, $routeParams, $location){
-	console.log($routeParams.rid);
 
 	var racunUrl = "api/racuni/" + $routeParams.rid;
+	var tipRacunaUrl = "api/banke/" + $routeParams.bid + "/tipovi-racuna";
 	var urlBan = "api/banke/";
 	
 	$scope.edRacunNew = {};
@@ -17,11 +17,14 @@ finalExam.controller("editRacunCTrl", function($scope, $http, $routeParams, $loc
 	$scope.edRacunNew.brRacuna = "";
 	$scope.edRacunNew.tipId = "";
 
+	$scope.bankeEdit = [];
+	$scope.tipoviEdit = [];
+
 
 	var getBanke = function(){
 		$http.get(urlBan).then(
 			function success(res){
-				$scope.banke = res.data;
+				$scope.bankeEdit = res.data;
 				getRacun();
 			},
 			function error(){
@@ -29,39 +32,46 @@ finalExam.controller("editRacunCTrl", function($scope, $http, $routeParams, $loc
 			}
 		)
 	}
-	getBanke();
-
+		
 	var getRacun = function(){
-
 		$http.get(racunUrl).then(
 			function success(res){
 				$scope.edRacunNew = res.data;
-				getTipove();
 			},
 			function error(){
 				alert("failed to fetch racun")
 			}
 		)
-
 	}
-	
 
 	var getTipove = function(){
-		var urlTip = "api/banke/" + $scope.edRacunNew.bankaId + "/tipovi-racuna";
-		$http.get(urlTip).then(
+		$http.get(tipRacunaUrl).then(
 			function success(res){
-				$scope.tipovi = res.data;
+				$scope.tipoviEdit = res.data;
+				getBanke();
 			},
 			function error(){
-				alert("failed to fetch tipove")
+				alert("failed to fetch tipove");
 			}
 		)
 	}
-	
+	getTipove();
 
+	$scope.getTipovePromena = function(bankId){
+		var urlTip = "api/banke/" + bankId + "/tipovi-racuna";
+		$http.get(urlTip).then(
+			function success(res){
+				$scope.tipoviEdit = res.data;
+			},
+			function error(){
+				alert("failed to fetch tipove after change");
+			}
+		)
+	}
 	$scope.editRacun = function(){
 		$http.put(racunUrl, $scope.edRacunNew).then(
 			function success(res){
+				
 				$location.path('/racuni');
 			}, 
 			function error(){
@@ -72,6 +82,68 @@ finalExam.controller("editRacunCTrl", function($scope, $http, $routeParams, $loc
 
 });
 
+finalExam.controller("transactionCtrl", function($scope, $http, $location){
+
+	var urlTransakcije = "api/transakcije";
+	var urlRacuna = "/api/racuni";
+
+	$scope.transakcija = {};
+
+	$scope.transakcija.racunUplatiocId = "";
+	$scope.transakcija.racunPrimaocId = "";
+	$scope.transakcija.iznos = "";
+
+	$scope.racuniTrans = [];
+
+	$scope.makeTransaction = function(){
+		if($scope.transakcija.racunUplatiocId == ""){
+			alert("odaberite racun posiljaoc");
+			return;
+		}
+		if($scope.transakcija.racunPrimaocId == ""){
+			alert("odaberite racun primaoc");
+			return;
+		}
+		if($scope.transakcija.racunUplatiocId === $scope.transakcija.racunPrimaocId){
+			alert("odabrali ste isti racun za primaoca i posiljaoca");
+			return;
+		}
+		if($scope.transakcija.iznos == ""){
+			alert("unesite zeljeni iznos");
+			return;
+		}
+
+		$http.post(urlTransakcije, $scope.transakcija).then(
+			function success(res){
+				alert("successful transaction")
+				$location.path('/racuni');
+			},
+			function error(odgovor){
+
+				if(odgovor.data.stateOfTransaction == false){
+					alert("nema dovoljno sredstava");
+				}else{
+					alert("failed to make transaction");
+				}
+			}
+		)
+	}
+
+	var getRacuneTrans = function(){
+		var promise = $http.get(urlRacuna);
+		promise.then(
+			function success(res){
+				$scope.racuniTrans = res.data;
+			},
+			function error(){
+				alert("failed to fetch racune");
+			}
+		)
+	}
+	getRacuneTrans();
+
+
+});
 
 finalExam.controller("RacunCTRL", function($scope, $http, $location){
 	var url = "/api/racuni";
@@ -101,7 +173,6 @@ finalExam.controller("RacunCTRL", function($scope, $http, $location){
 
 
 	$scope.addRacun = function(){
-		console.log($scope.RacunNew);
 		
 		$http.post(url, $scope.RacunNew).then(
 			function success(res){
@@ -139,10 +210,11 @@ finalExam.controller("RacunCTRL", function($scope, $http, $location){
 			function success(res){
 				$scope.racuni = res.data;
 				$scope.totalPages = res.headers("totalPages")
-				console.log($scope.racuni);
+				if($scope.pageNum != 0 && $scope.racuni.length == 0){
+					$scope.pageNum--;
+					getRacune();
+				}
 				
-				
-
 			}, 
 			function error(){
 				alert("failed to fetch racune")
@@ -164,13 +236,16 @@ finalExam.controller("RacunCTRL", function($scope, $http, $location){
 	getBanke();
 
 	$scope.getTipovi = function(){
+
 		var urlTip = "api/banke/" + $scope.RacunNew.bankaId + "/tipovi-racuna";
 		$http.get(urlTip).then(
 			function success(res){
 				$scope.tipovi = res.data;
 			},
 			function error(){
-				alert("failed to fetch tipove")
+				alert("choose your bank first");
+				console.log("something happend");
+				return;
 			}
 		)
 	}
@@ -179,20 +254,23 @@ finalExam.controller("RacunCTRL", function($scope, $http, $location){
 	$scope.todeleteRacun = function(delID){
 		var urldelete = url + "/" + delID;
 		$http.delete(urldelete).then(
-			function success(res){
-
+			function success(){
 				getRacune();
 			},
-			function error(){
-
-				alert("failed to delete racun")
+			function error(response){
+				if(response.status == 403){
+					alert("Bad Request you have to pull all your funds!")
+				}else{
+					alert("failed to delete racun")
+				}
+				
 			}
 		)
 	}
 
 
-	$scope.toEditRacun = function(id){
-		$location.path('/racuni/edit/' + id);
+	$scope.toEditRacun = function(id, banksId){
+		$location.path('/racuni/edit/' + id + "/" + banksId);
 	}
 
 	$scope.changePage = function(direction){
@@ -203,10 +281,16 @@ finalExam.controller("RacunCTRL", function($scope, $http, $location){
 	$scope.findRacun = function(){
 		$scope.pageNum = 0;
 		getRacune();
+	}
+
+	$scope.clearSearch = function() {
 		$scope.search.jmbg = "";
 		$scope.search.bankaId = "";
+		getRacune();
 	}
 });
+
+
 
 finalExam.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
@@ -216,8 +300,11 @@ finalExam.config(['$routeProvider', function($routeProvider) {
 		.when('/racuni', {
 			templateUrl : '/app/html/racuni.html'
 		})
-		.when('/racuni/edit/:rid', {
+		.when('/racuni/edit/:rid/:bid', {
 			templateUrl : '/app/html/edit-racun.html'
+		})
+		.when('/transaction', {
+			templateUrl : '/app/html/transaction.html'
 		})
 		.otherwise({
 			redirectTo: '/'

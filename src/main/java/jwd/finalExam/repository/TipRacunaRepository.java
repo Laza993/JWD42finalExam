@@ -11,7 +11,5 @@ import jwd.finalExam.model.Tipracuna;
 public interface TipRacunaRepository extends JpaRepository<Tipracuna, Long>{
 
 	List<Tipracuna> findAllByBankaId(Long id);
-	
 
-	
 }

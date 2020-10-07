@@ -12,8 +12,6 @@ public interface RacunService {
 	Racun delete(Long id);
 	Page<Racun> search(String jmbg, Long bankaId, int pageNum);
 	Page<Racun> findAll(int pageNum);
-	
-//	Page<Automobil> findAll(int pageNum);
-//	List<Automobil> findAllByKompanijaId(Long kompId);
-//	Page<Automobil> search(String model, Integer godiste, Double potrosnja, int pageNum);
+	List<Racun> findAll();
+
 }

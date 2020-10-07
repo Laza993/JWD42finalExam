@@ -20,9 +20,6 @@ import jwd.finalExam.web.dto.BankaDTO;
 import jwd.finalExam.web.dto.TipRacunaDTO;
 
 
-
-
-
 @RestController
 @RequestMapping(value = "api/banke")
 public class ApiBankaController{

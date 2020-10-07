@@ -23,7 +23,7 @@ public class RacunToDto implements Converter<Racun, RacunDTO> {
 		dto.setId(source.getId());
 		dto.setImePrezime(source.getImePrezime());
 		
-		dto.setJMDB(source.getJMDB());
+		dto.setJMDB(source.getJMBG());
 		
 		dto.setStanje(source.getStanje());
 		

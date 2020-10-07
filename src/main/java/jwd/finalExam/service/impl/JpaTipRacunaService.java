@@ -38,18 +38,18 @@ public class JpaTipRacunaService implements TipRacunaService {
 	}
 	
 	
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
 		Banka ban1 = banSer.findOne(1L);
-
-		Banka ban2 = banSer.findOne(2L);
-		
-		
+		Banka ban2 = banSer.findOne(2L);	
 		Tipracuna tip1 = new Tipracuna("tekuci", 5.0, ban1);
 		Tipracuna tip2 = new Tipracuna("stedni", 3.0, ban2);
-		
+		Tipracuna tip3 = new Tipracuna("stedniIntesa", 3.0, ban1);
+		Tipracuna tip4 = new Tipracuna("tekuciKomercijalna", 4.8, ban2);
 		save(tip1);
 		save(tip2);
+		save(tip3);
+		save(tip4);
 	}
 
 	@Override
@@ -62,6 +62,13 @@ public class JpaTipRacunaService implements TipRacunaService {
 	public List<Tipracuna> findAllByBankaId(Long id) {
 		// TODO Auto-generated method stub
 		return tipRep.findAllByBankaId(id);
+	}
+
+	@Override
+	public Tipracuna delete(Long id) {
+		Tipracuna deleted = findOne(id);
+		tipRep.delete(id);
+		return deleted;
 	}
 	
 

@@ -1,0 +1,30 @@
+<div ng-controller="transactionCtrl">
+    <div>
+        <form>
+            <label><h1>Nalog za prenos </h1></label>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <div class="form-group">
+                        <label for="brUplatioca" >Broj racuna uplatioca</label>
+                        <select class="form-control" ng-model="transakcija.racunUplatiocId" >
+                            <option ng-repeat="rp in racuniTrans" value="{{rp.id}}">{{rp.brRacuna}} {{rp.imePrezime}} {{rp.bankaNaziv}} {{rp.stanje}} </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="brPrimaoca" >Broj racuna primaoca</label>
+                        <select class="form-control" ng-model="transakcija.racunPrimaocId">
+                            <option ng-repeat="rpr in racuniTrans" value="{{rpr.id}}">{{rpr.brRacuna}} {{rpr.imePrezime}} {{rpr.bankaNaziv}} {{rpr.stanje}}</option>
+                        </select>                       
+                    </div>
+                    <div class="form-group">
+                        <label for="iznos" >iznos</label>
+                        <input class="form-control" ng-model="transakcija.iznos"/>
+                    </div>
+                    <tr>
+                        <td><button ng-click="makeTransaction()">prenesi</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

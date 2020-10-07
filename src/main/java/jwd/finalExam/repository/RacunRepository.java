@@ -16,7 +16,7 @@ public interface RacunRepository extends JpaRepository<Racun, Long>{
 	
 	
 	@Query("SELECT r FROM Racun r WHERE "
-	+ "(:jmbg IS NULL or r.JMDB like :jmbg ) AND "
+	+ "(:jmbg IS NULL or r.JMBG like :jmbg ) AND "
 	+ "(:bankaId IS NULL OR r.banka.id = :bankaId) ")
 	Page<Racun> search(
 			@Param("jmbg") String jmbg, 

@@ -14,8 +14,8 @@
                     </div>
                     <div class="form-group">
                         <label>banka</label>
-                        <select class="form-control" ng-model="edRacunNew.bankaId">
-                            <option ng-repeat="b in banke"  ng-selected="b.id ==edRacunNew.bankaId" value="{{b.id}}">{{b.naziv}}</option>
+                        <select class="form-control" ng-model="edRacunNew.bankaId" ng-change="getTipovePromena(edRacunNew.bankaId)">
+                            <option ng-repeat="b in bankeEdit" ng-selected="b.id == edRacunNew.bankaId" value="{{b.id}}">{{b.naziv}}</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -24,8 +24,8 @@
                     </div>
                     <div class="form-group">
                         <label>tip racuna</label>
-                        <select class="form-control" ng-model="edRacunNew.tipId" ng-focus="getTipovi()">
-                            <option ng-repeat="t in tipovi" ng-selected="t.id == edRacunNew.tipId" value="{{t.id}}">{{t.naziv}}</option>
+                        <select class="form-control" ng-model="edRacunNew.tipId">
+                            <option ng-repeat="t in tipoviEdit" ng-selected="t.id == edRacunNew.tipId" value="{{t.id}}">{{t.naziv}}</option>
                         </select>
                     </div>
                     <tr>

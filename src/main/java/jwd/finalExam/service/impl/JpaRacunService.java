@@ -1,8 +1,8 @@
 package jwd.finalExam.service.impl;
 
+
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import jwd.finalExam.model.Banka;
 import jwd.finalExam.model.Racun;
 import jwd.finalExam.model.Tipracuna;
-import jwd.finalExam.repository.BankaRepository;
 import jwd.finalExam.repository.RacunRepository;
 import jwd.finalExam.service.BankaService;
 import jwd.finalExam.service.RacunService;
@@ -53,7 +52,7 @@ public class JpaRacunService implements RacunService {
 	}
 	
 	
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
 		Banka ban1 = banSer.findOne(1L);
 
@@ -76,13 +75,19 @@ public class JpaRacunService implements RacunService {
 			jmbg = '%' + jmbg + '%';
 		}
 
-		return racRep.search(jmbg, bankaId, new PageRequest(pageNum, 2));
+		return racRep.search(jmbg, bankaId, new PageRequest(pageNum, 5));
 	}
 
 	@Override
 	public Page<Racun> findAll(int pageNum) {
 		
-		return racRep.findAll(new PageRequest(pageNum, 2));
+		return racRep.findAll(new PageRequest(pageNum, 5));
+	}
+
+	@Override
+	public List<Racun> findAll() {
+		
+		return racRep.findAll();
 	}
 
 }

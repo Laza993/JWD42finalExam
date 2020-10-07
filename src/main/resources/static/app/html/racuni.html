@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group">
                         <label>banka</label>
-                        <select class="form-control" ng-model="RacunNew.bankaId">
+                        <select class="form-control" ng-model="RacunNew.bankaId" ng-change="getTipovi()">
                             <option ng-repeat="b in banke" value="{{b.id}}">{{b.naziv}}</option>
                         </select>
                     </div>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group">
                         <label>tip racuna</label>
-                        <select class="form-control" ng-model="RacunNew.tipId" ng-focus="getTipovi()">
+                        <select class="form-control" ng-model="RacunNew.tipId" ng-click="getTipovi()">
                             <option ng-repeat="t in tipovi" value="{{t.id}}">{{t.naziv}}</option>
                         </select>
                     </div>
@@ -55,6 +55,7 @@
                         </select>
                     </div>
                         <td><button ng-click="findRacun()">Trazi</button></td>
+                        <td><button ng-click="clearSearch()">Ocisti pretragu</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -63,6 +64,9 @@
 
 
     <div>
+        <div>
+            <h3>Page: {{pageNum}}</h3>
+        </div>
         <div style="margin-bottom:10px" class="btn-group float-right">
 			<button ng-disabled="pageNum == 0" ng-click="changePage(-1)" class="btn btn-primary">Previous</button>
 			<button ng-disabled="pageNum == totalPages - 1" ng-click="changePage(1)" class="btn btn-primary">Next</button>
@@ -89,7 +93,7 @@
                         <td>{{r.brRacuna}}</td>
                         <td>{{r.tipNaziv}}</td>
                         <td>{{r.bankaNaziv}}</td>
-                        <td><button ng-click="toEditRacun(r.id)">edit</button></td>
+                        <td><button ng-click="toEditRacun(r.id, r.bankaId)">edit</button></td>
                         <td><button ng-click="todeleteRacun(r.id)">obrisi</button></td>
                     </tr>
                 </tbody>

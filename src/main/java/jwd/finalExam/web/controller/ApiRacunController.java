@@ -42,36 +42,35 @@ public class ApiRacunController{
 		return new ResponseEntity<>(racConv.convert(racun), HttpStatus.OK);
 	}
 	
-	
-	
 	@RequestMapping(method = RequestMethod.GET)
 	ResponseEntity<List<RacunDTO>> findAll(
-			@RequestParam(value="pageNum", defaultValue = "0") int pageNum,
+			@RequestParam(required = false) Integer pageNum,
 			@RequestParam(required = false) String jmbg,
 			@RequestParam(required = false) Long bankaId
 			){
-		
-		Page<Racun> racuni = null;
-		
-		if(jmbg != null || bankaId != null) {
-			racuni = racSer.search(jmbg, bankaId, pageNum);
+		if(pageNum == null) {
+			List<Racun> racuni = racSer.findAll();
+			return new ResponseEntity<>(racConv.convert(racuni), HttpStatus.OK);
 		}else {
-			racuni = racSer.findAll(pageNum);
+			Page<Racun> racuni = null;
+			
+			if(jmbg != null || bankaId != null) {
+				racuni = racSer.search(jmbg, bankaId, pageNum);
+			}else {
+				racuni = racSer.findAll(pageNum);
+			}
+			
+			HttpHeaders headers = new HttpHeaders();
+			
+			headers.add("totalPages", Integer.toString(racuni.getTotalPages()));
+			return new ResponseEntity<>(racConv.convert(racuni.getContent()), headers, HttpStatus.OK);
 		}
-		
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("totalPages", Integer.toString(racuni.getTotalPages()));
-		return new ResponseEntity<>(racConv.convert(racuni.getContent()), headers, HttpStatus.OK);
+
 	}
 	
 	
-	
-
-	
 	@RequestMapping(method=RequestMethod.POST, consumes="application/json")
-	
-	public ResponseEntity<RacunDTO> add(@RequestBody RacunDTO newRac){
+	ResponseEntity<RacunDTO> add(@RequestBody RacunDTO newRac){
 		System.out.println(newRac.toString());
 
 		Racun savedRacun = racSer.save(dtoToRac.convert(newRac));
@@ -81,27 +80,26 @@ public class ApiRacunController{
 
 	@RequestMapping(method=RequestMethod.PUT, value="/{id}",
 					consumes="application/json")
-	public ResponseEntity<RacunDTO> edit(@RequestBody RacunDTO dto,
+	ResponseEntity<RacunDTO> edit(@RequestBody RacunDTO dto,
 											@PathVariable Long id){
 		if(!id.equals(dto.getId())){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Racun persisted = racSer.save(dtoToRac.convert(dto));
-	
 		return new ResponseEntity<>(racConv.convert(persisted), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	ResponseEntity<RacunDTO> delete(@PathVariable Long id){
 		
-		if(racSer.findOne(id) != null && racSer.findOne(id).getStanje() != 0) {
+		if(racSer.findOne(id) != null && racSer.findOne(id).getStanje() != null && racSer.findOne(id).getStanje() != 0) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		Racun deleted = racSer.delete(id);
 		if(deleted == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(racConv.convert(deleted),	HttpStatus.OK);
+		return new ResponseEntity<>(racConv.convert(deleted), HttpStatus.OK);
 	}
 
 }

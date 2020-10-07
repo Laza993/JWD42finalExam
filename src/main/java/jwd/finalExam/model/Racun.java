@@ -1,12 +1,16 @@
 package jwd.finalExam.model;
 
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,24 +22,31 @@ public class Racun {
 	@Column(nullable = false)
 	private String ImePrezime;
 	@Column
-	private String JMDB;
+	private String JMBG;
 	@Column
 	private String brRacuna;
 	@Column
 	private Double stanje;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Tipracuna tip;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Banka banka;
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "racunUplatioc")
+	private List<Transakcija> transakcijeSlanje;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "racunPrimaoc")
+	private List<Transakcija> transakcijePrijem;
 	
 	
 	
 	
-	public Racun(String imePrezime, String jMDB, String brRacuna, Double stanje, Tipracuna tip, Banka banka) {
+	public Racun(String imePrezime, String JMBG, String brRacuna, Double stanje, Tipracuna tip, Banka banka) {
 		super();
 		ImePrezime = imePrezime;
-		JMDB = jMDB;
+		this.JMBG = JMBG;
 		this.brRacuna = brRacuna;
 		this.stanje = stanje;
 		this.tip = tip;
@@ -57,12 +68,7 @@ public class Racun {
 	public void setImePrezime(String imePrezime) {
 		ImePrezime = imePrezime;
 	}
-	public String getJMDB() {
-		return JMDB;
-	}
-	public void setJMDB(String jMDB) {
-		JMDB = jMDB;
-	}
+
 	public String getBrRacuna() {
 		return brRacuna;
 	}
@@ -93,6 +99,36 @@ public class Racun {
 			banka.getRacuni().add(this);
 		}
 	}
+	public String getJMBG() {
+		return JMBG;
+	}
+	public void setJMBG(String jMBG) {
+		JMBG = jMBG;
+	}
+	
+	
+	public List<Transakcija> getTransakcijeSlanje() {
+		return transakcijeSlanje;
+	}
+
+	public List<Transakcija> getTransakcijePrijem() {
+		return transakcijePrijem;
+	}
+	
+	public void addTransakcijeSlanje(Transakcija isplata) {
+		this.transakcijeSlanje.add(isplata);
+		if(isplata.getRacunUplatioc() != this) {
+			isplata.setRacunUplatioc(this);
+		}
+	}
+	public void addTransakcijePrijem(Transakcija uplata) {
+		this.transakcijePrijem.add(uplata);
+		if(uplata.getRacunPrimaoc() != this) {
+			uplata.setRacunPrimaoc(this);
+		}
+	}
+	
+	
 	
 
 	

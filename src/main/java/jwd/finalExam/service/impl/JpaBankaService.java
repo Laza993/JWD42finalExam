@@ -38,7 +38,7 @@ public class JpaBankaService implements BankaService {
 	}
 	
 	
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
 		Banka ban1 = new Banka("intesa", 10000000.0);
 
